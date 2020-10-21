@@ -1,5 +1,9 @@
 package com.queueservice.taxapplication.resources;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.apache.tomcat.util.json.JSONParser;
 
 
@@ -19,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.queueservice.taxapplication.fetch.FetchCompanyTaxDetails;
 import com.queueservice.taxapplication.model.CompanyTaxInfo;
+import com.queueservice.taxapplication.model.TaxSlabModel;
 
 @RestController
 public class AwsSQSController {
@@ -55,6 +60,19 @@ public class AwsSQSController {
         queueMessagingTemplate.send(endpoint, MessageBuilder.withPayload(jsonMsg).build());
         
     }
+    
+    @GetMapping("/getcomptax")
+    public List<CompanyTaxInfo> getCompanyTax() {
+        List<CompanyTaxInfo> compTax = new ArrayList<CompanyTaxInfo>();
+        fetchCompTax.findAll().forEach(compTax::add);
+        return compTax;
+    }
+    
+    @GetMapping(path = "getcomptax/{id}")
+	public Optional<CompanyTaxInfo> getTaxDetail(@PathVariable("id") String id) {
+		  return fetchCompTax.findById(id);
+		  
+	}
     
     @SqsListener("tax")
     public void loadMessageFromSQS(String message) throws JsonMappingException, JsonProcessingException  {
