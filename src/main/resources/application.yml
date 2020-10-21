@@ -1,0 +1,10 @@
+cloud:
+  aws:
+    region:
+      static: ap-south-1
+      auto: false
+    credentials:
+      access-key: AKIAQHMVH22JZM7EUFIU
+      secret-key: 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
+    end-point:
+      uri: https://sqs.ap-south-1.amazonaws.com/015882245779/tax
