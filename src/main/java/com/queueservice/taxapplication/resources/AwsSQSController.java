@@ -1,6 +1,7 @@
 package com.queueservice.taxapplication.resources;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +28,7 @@ import com.queueservice.taxapplication.model.CompanyTaxInfo;
 import com.queueservice.taxapplication.model.TaxSlabModel;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class AwsSQSController {
 	
 	@Autowired
@@ -83,6 +86,8 @@ public class AwsSQSController {
         System.out.println(receivedTax.getCompanyCode() + " " + receivedTax.getEmployeeId());
         
         fetchCompTax.save(receivedTax);
+        
+        SendSms.sendSms("Dear Employee, Your tax received successfully !"+ new Date().toLocaleString(), "9075539986");
     }
 
 }

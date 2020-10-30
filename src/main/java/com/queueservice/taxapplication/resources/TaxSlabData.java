@@ -58,12 +58,19 @@ public class TaxSlabData {
 	}
 	
 	@GetMapping(path = "gettax/{taxDeducted}/{totalAmount}/{year}")
-	public TaxSlabModel calculateTax(@PathVariable("taxDeducted") int taxDeducted,
+	public int calculateTax(@PathVariable("taxDeducted") int taxDeducted,
 			@PathVariable("totalAmount") int totalAmount,
 			@PathVariable("year") int year) {
 		
 		TaxSlabModel tax = fetchTax.findByFinancialYear(year);
-		return tax;
+		int taxCalculated = (tax.getTaxPercentage()*tax.getEndIncome())/100;
+		int taxNeedToPay = 0;
+		
+		if(taxCalculated>taxDeducted) {
+			taxNeedToPay = taxCalculated - taxDeducted;
+		}
+		
+		return taxNeedToPay;
 		
 	}
 	
